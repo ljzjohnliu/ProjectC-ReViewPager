@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="180dp"
+    android:layout_height="match_parent"
+    android:background="#00779900">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/pic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="6dp"
+        app:actualImageScaleType="fitCenter"
+        app:placeholderImage="@drawable/default_avatar_icon"
+        app:placeholderImageScaleType="centerCrop"
+        app:roundedCornerRadius="10dp"
+        app:roundingBorderColor="@color/black"
+        app:roundingBorderWidth="1dp" />
+</RelativeLayout>
