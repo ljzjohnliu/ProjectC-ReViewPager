@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.study.reviewpager.adapter.ViewPagerAdapter;
+import com.study.reviewpager.utils.ViewPagerSnapHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        new LinearSnapHelper().attachToRecyclerView(mRecyclerView);
+//        new LinearSnapHelper().attachToRecyclerView(mRecyclerView);
+        ViewPagerSnapHelper snapHelper = new ViewPagerSnapHelper();
+        mRecyclerView.setOnFlingListener(null);
+        snapHelper.attachToRecyclerView(mRecyclerView);
 
         mRecyclerView.setAdapter(mViewPagerAdapter);
     }
