@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
  * LinearSnapHelper 可以滑动滚动
  * PagerSnapHelper 只能一张张滑动
  */
-public class ViewPagerSnapHelper extends /*LinearSnapHelper*/PagerSnapHelper {
+public class ViewPagerSnapHelper extends LinearSnapHelper {
+//public class ViewPagerSnapHelper extends PagerSnapHelper {
     private static final String TAG = "ViewPagerSnapHelper";
-    private static final float STAY_SCALE = 0.95f;
+    private static final float STAY_SCALE = 0.90f;
     private RecyclerView recyclerView;
 
     @Override

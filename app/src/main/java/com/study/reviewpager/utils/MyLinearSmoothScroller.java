@@ -1,6 +1,7 @@
 package com.study.reviewpager.utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearSmoothScroller;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MyLinearSmoothScroller extends LinearSmoothScroller {
+
     public MyLinearSmoothScroller(Context context) {
         super(context);
     }
@@ -22,8 +24,10 @@ public class MyLinearSmoothScroller extends LinearSmoothScroller {
         );
         // 计算动画时间
         int time = calculateTimeForDeceleration(distance);
+        Log.d("ljz", "onTargetFound: time = " + time);
         if (time > 0) {
             // 这里仅实现了水平或者垂直一种方向上的矫正，两者同时的情况暂不考虑
+            Log.d("ljz", "onTargetFound: canScrollVertically = " + getLayoutManager().canScrollVertically());
             if (getLayoutManager().canScrollVertically())
                 action.update(0, distance, time, mDecelerateInterpolator);
             else

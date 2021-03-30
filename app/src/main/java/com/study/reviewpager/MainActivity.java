@@ -169,10 +169,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mPosition = 2;
+        mPosition = 22;
         Log.d(TAG, "updateUI: mPosition = " + mPosition);
 
 //        levelRecyclerView.smoothScrollToPosition(mPosition);
+        ((LinearLayoutManager) levelRecyclerView.getLayoutManager()).scrollToPositionWithOffset(mPosition, 0);//不带动画的定位
+        ((LinearLayoutManager) levelRecyclerView.getLayoutManager()).setStackFromEnd(true);
+
         if (scroller == null) {
             scroller = new MyLinearSmoothScroller(this);
         }
