@@ -4,13 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
-    <Button
+    <TextView
         android:id="@+id/test_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ViewPagerFragment"/>
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/text_bg"
+        android:padding="6dp"
+        android:text="ViewPagerFragment" />
+
+    <TextView
+        android:id="@+id/test_btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:padding="6dp"
+        android:layout_toEndOf="@+id/test_btn"
+        android:background="@drawable/text_bg"
+        android:text="JustCoverFlowActivity" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pic_recyclerview"

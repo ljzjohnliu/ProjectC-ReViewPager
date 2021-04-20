@@ -1,5 +1,6 @@
-package com.study.reviewpager;
+package com.study.reviewpager.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.study.reviewpager.R;
 import com.study.reviewpager.adapter.SignUpLevelAdapter;
 import com.study.reviewpager.adapter.ViewPagerAdapter;
 import com.study.reviewpager.bean.LevelInfo;
@@ -42,11 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
     MyLinearSmoothScroller scroller;
 
-    @OnClick({R.id.sign_reduce, R.id.sign_add, R.id.test_btn})
+    @OnClick({R.id.sign_reduce, R.id.sign_add, R.id.test_btn, R.id.test_btn2})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.test_btn:
                 showFragment();
+                break;
+            case R.id.test_btn2:
+                startActivity(new Intent(this, JustCoverFlowActivity.class));
                 break;
             case R.id.sign_reduce:
                 mPosition--;
