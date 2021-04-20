@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.study.reviewpager.adapter.SignUpLevelAdapter;
 import com.study.reviewpager.adapter.ViewPagerAdapter;
 import com.study.reviewpager.bean.LevelInfo;
+import com.study.reviewpager.fragment.ViewPagerFragment;
 import com.study.reviewpager.utils.HorizontalItemDecoration;
 import com.study.reviewpager.utils.MyLinearSmoothScroller;
 import com.study.reviewpager.utils.ViewPagerSnapHelper;
@@ -41,9 +42,12 @@ public class MainActivity extends AppCompatActivity {
 
     MyLinearSmoothScroller scroller;
 
-    @OnClick({R.id.sign_reduce, R.id.sign_add})
+    @OnClick({R.id.sign_reduce, R.id.sign_add, R.id.test_btn})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.test_btn:
+                showFragment();
+                break;
             case R.id.sign_reduce:
                 mPosition--;
                 if (mPosition <= 0) {
@@ -245,5 +249,10 @@ public class MainActivity extends AppCompatActivity {
         mLevelDatas.add(new LevelInfo(36, "全球巨星", "嘎纳影后"));
         mLevelDatas.add(new LevelInfo(37, "全球巨星", "奥斯卡影后"));
         mLevelDatas.add(new LevelInfo());
+    }
+
+    private void showFragment() {
+        ViewPagerFragment fragment = ViewPagerFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), "ViewPagerFragment");
     }
 }

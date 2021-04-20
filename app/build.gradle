@@ -61,4 +61,6 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:10.2.3"
 
     implementation 'com.facebook.fresco:fresco:2.3.0'
+
+    implementation "androidx.cardview:cardview:1.0.0"
 }
