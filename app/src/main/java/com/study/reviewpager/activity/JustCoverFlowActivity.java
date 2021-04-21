@@ -38,7 +38,10 @@ public class JustCoverFlowActivity extends AppCompatActivity implements GalleryA
         mList.setGreyItem(true); //设置灰度渐变
         mList.setAlphaItem(true); //设置半透渐变
         mList.setLoop(); //循环滚动，注：循环滚动模式暂不支持平滑滚动
+        mList.setIntervalRatio(0.3f);
+        mList.setFanScroll(true, 30f);
         mList.setAdapter(new GalleryAdapter(this, list, false));
+        mList.smoothScrollToPosition(1);
         mList.setOnItemSelectedListener(new CoverFlowLayoutManger.OnSelected() {
             @Override
             public void onItemSelected(int position) {

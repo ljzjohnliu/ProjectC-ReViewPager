@@ -24,6 +24,7 @@
         </activity>
 
         <activity android:name=".activity.JustCoverFlowActivity" />
+        <activity android:name=".activity.TestAnimatorActivity" />
     </application>
 
 </manifest>

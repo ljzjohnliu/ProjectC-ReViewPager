@@ -116,6 +116,18 @@ public class RecyclerCoverFlow extends RecyclerView {
         setLayoutManager(mManagerBuilder.build());
     }
 
+    /**
+     * 设置item是否扇形滚动
+     *
+     * @param isFanScroll Item间隔比例。
+     *                      即：item的宽 x intervalRatio
+     */
+    public void setFanScroll(boolean isFanScroll, float angle) {
+        createManageBuilder();
+        mManagerBuilder.setFanScroll(isFanScroll, angle);
+        setLayoutManager(mManagerBuilder.build());
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
         if (!(layout instanceof CoverFlowLayoutManger)) {

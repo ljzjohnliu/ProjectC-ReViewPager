@@ -6,6 +6,8 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -27,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
+    private static final String TAG = "ljzxxx";
 
     /**
      * item 向右移动
@@ -139,15 +142,27 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
      */
     private boolean mItem3D = false;
 
+    /**
+     * 是否启动扇形滚动
+     */
+    boolean mIsFanScroll = false;
+
+    /**
+     * 扇形滚动角度
+     */
+    float mFanAngle = 0f;
+
 
     private CoverFlowLayoutManger(boolean isFlat, boolean isGreyItem,
                                   boolean isAlphaItem, float cstInterval,
-                                  boolean isLoop, boolean is3DItem) {
+                                  boolean isLoop, boolean is3DItem, boolean isFanScroll, float fanAngle) {
         mIsFlatFlow = isFlat;
         mItemGradualGrey = isGreyItem;
         mItemGradualAlpha = isAlphaItem;
         mIsLoop = isLoop;
         mItem3D = is3DItem;
+        mIsFanScroll = isFanScroll;
+        mFanAngle = fanAngle;
         if (cstInterval >= 0) {
             mIntervalRatio = cstInterval;
         } else {
@@ -239,6 +254,7 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
 
         Rect displayFrame = new Rect(mOffsetAll, 0, mOffsetAll + getHorizontalSpace(), getVerticalSpace());
 
+        Log.d(TAG, "layoutItems: 0000 getChildCount() = " + getChildCount());
         int position = 0;
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
@@ -250,11 +266,15 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
             }
 
             Rect rect = getFrame(position);
+            Log.d(TAG, "layoutItems: 1111 scrollDirection = " + scrollDirection + ", position = " + position);
+            Log.d(TAG, "layoutItems: 2222 displayFrame left = " + displayFrame.left + ", right = " + displayFrame.right + ", top = " + displayFrame.top + ", bottom = " + displayFrame.bottom);
+            Log.d(TAG, "layoutItems: 3333 rect left = " + rect.left + ", right = " + rect.right + ", top = " + rect.top + ", bottom = " + rect.bottom);
 
             if (!Rect.intersects(displayFrame, rect)) {//Item没有在显示区域，就说明需要回收
                 removeAndRecycleView(child, recycler); //回收滑出屏幕的View
                 mHasAttachedItems.delete(position);
             } else { //Item还在显示区域内，更新滑动后Item的位置
+                Log.d(TAG, "layoutItems: 3300 layoutItem child = " + child + ", left = " + rect.left + ", right = " + rect.right + ", top = " + rect.top + ", bottom = " + rect.bottom);
                 layoutItem(child, rect); //更新Item位置
                 mHasAttachedItems.put(position, true);
             }
@@ -270,7 +290,7 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
             if (min < 0) min = 0;
             if (max > getItemCount()) max = getItemCount();
         }
-
+        Log.d(TAG, "layoutItems: *****3344  min = " + min + ", max = " + max);
         for (int i = min; i < max; i++) {
             Rect rect = getFrame(i);
             if (Rect.intersects(displayFrame, rect) &&
@@ -281,15 +301,21 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
                 if (actualPos < 0) actualPos = getItemCount() + actualPos;
 
                 View scrap = recycler.getViewForPosition(actualPos);
+                Log.d(TAG, "layoutItems: 4444 scrap = " + scrap + ", actualPos = " + actualPos);
                 checkTag(scrap.getTag());
                 scrap.setTag(new TAG(i));
+
 
                 measureChildWithMargins(scrap, 0, 0);
                 if (scrollDirection == SCROLL_TO_RIGHT || mIsFlatFlow) { //item 向右滚动，新增的Item需要添加在最前面
                     addView(scrap, 0);
+//                    scrap.setRotation(-10);
                 } else { //item 向左滚动，新增的item要添加在最后面
                     addView(scrap);
+//                    scrap.setRotation(10);
                 }
+//                scrap.setRotation(0);
+                Log.d(TAG, "layoutItems: 4400 layoutItem scrap = " + scrap + ", left = " + rect.left + ", right = " + rect.right + ", top = " + rect.top + ", bottom = " + rect.bottom);
                 layoutItem(scrap, rect); //将这个Item布局出来
                 mHasAttachedItems.put(i, true);
             }
@@ -308,9 +334,26 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
                 frame.top,
                 frame.right - mOffsetAll,
                 frame.bottom);
+        //todo ljz
+        DisplayMetrics dm = child.getContext().getResources().getDisplayMetrics();
+        float density = dm.density;
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        Log.d("TAG", "layoutItem: left = " + (frame.left - mOffsetAll) + ", right = " + (frame.right - mOffsetAll) + ", computeScale = " + computeScale(frame.left - mOffsetAll) + ", width = " + width
+                + ", isLeft == " + ((frame.left - mOffsetAll) + (frame.right - frame.left) / 2 < width / 2));
+//        Log.d("TAG", "layoutItem: computeScale = " + computeScale(frame.left - mOffsetAll));
+//        Log.d("TAG", "layoutItem: density = " + density + ", width = " + width + ", height = " + height);
         if (!mIsFlatFlow) { //不是平面普通滚动的情况下才进行缩放
             child.setScaleX(computeScale(frame.left - mOffsetAll)); //缩放
             child.setScaleY(computeScale(frame.left - mOffsetAll)); //缩放
+        }
+
+        if (mIsFanScroll) {
+            if ((frame.left - mOffsetAll) + (frame.right - frame.left) / 2 < width / 2) {
+                child.setRotation(-mFanAngle * (1 - computeScale(frame.left - mOffsetAll)));
+            } else {
+                child.setRotation(mFanAngle * (1 - computeScale(frame.left - mOffsetAll)));
+            }
         }
 
         if (mItemGradualAlpha) {
@@ -546,6 +589,7 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
             public void onAnimationUpdate(ValueAnimator animation) {
                 mOffsetAll = Math.round((float) animation.getAnimatedValue());
                 layoutItems(mRecycle, mState, direction);
+                //todo ljz
             }
         });
         mAnimation.addListener(new Animator.AnimatorListener() {
@@ -715,6 +759,8 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
         float cstIntervalRatio = -1f;
         boolean isLoop = false;
         boolean is3DItem = false;
+        boolean isFanScroll = false;
+        float fanAngle = 0f;
 
         public Builder setFlat(boolean flat) {
             isFlat = flat;
@@ -736,6 +782,12 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
             return this;
         }
 
+        public Builder setFanScroll(boolean isFanScroll, float fanAngle) {
+            this.isFanScroll = isFanScroll;
+            this.fanAngle = fanAngle;
+            return this;
+        }
+
         public Builder loop() {
             isLoop = true;
             return this;
@@ -748,7 +800,7 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
 
         public CoverFlowLayoutManger build() {
             return new CoverFlowLayoutManger(isFlat, isGreyItem,
-                    isAlphaItem, cstIntervalRatio, isLoop, is3DItem);
+                    isAlphaItem, cstIntervalRatio, isLoop, is3DItem, isFanScroll, fanAngle);
         }
     }
 }

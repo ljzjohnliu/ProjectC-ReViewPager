@@ -48,10 +48,12 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.test_btn:
-                showFragment();
+//                showFragment();
+                startActivity(new Intent(this, JustCoverFlowActivity.class));
                 break;
             case R.id.test_btn2:
-                startActivity(new Intent(this, JustCoverFlowActivity.class));
+//                startActivity(new Intent(this, JustCoverFlowActivity.class));
+                startActivity(new Intent(this, TestAnimatorActivity.class));
                 break;
             case R.id.sign_reduce:
                 mPosition--;
